@@ -1,15 +1,18 @@
 #ifndef HTREE
 #define HTREE
 #include "./Node.h"
+#include "./circularlist.h"
 #include <iostream>
 
 template <typename T>
 class Tree {
 public:
   Node<T> * root;
-  Tree():root(nullptr){}
+  CircularList<Node<T>*> *elements;
+  Tree():root(nullptr){elements = new CircularList<Node<T>*>;}
   ~Tree()
   {
+    delete elements;
     if(root){root->autodelete();delete root;}
   }
   void insert(T value)
@@ -50,6 +53,7 @@ public:
     {
       root = value;
     }
+    updatelist();
   }
   void deleten(Node<T> *&value)
   {
@@ -71,10 +75,11 @@ public:
       delete value;
       value = nullptr;
     }
+    updatelist();
   }
   int height()
   {
-    return (root->height())+1;
+    return (root->height());
   }
   void inorder()
   {
@@ -90,6 +95,23 @@ public:
   {
     root->postorder();
     std::cout << std::endl;
+  }
+  void updatelist()
+  {
+    elements->clear();
+    root->updatelist(elements, 1, height());
+  }
+  void isComplete()
+  {
+    return root->isComplete();
+  }
+  bool isBST()
+  {
+    return root->isBSTnode();
+  }
+  static bool equal(Tree<T> *a, Tree<T> *b)
+  {
+    return Node<T>::equal(a->root, b->root);
   }
 };
 

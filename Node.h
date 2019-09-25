@@ -1,5 +1,6 @@
 #ifndef HNODO
 #define HNODO
+#include "./circularlist.h"
 #include <iostream>
 
 template <typename T>
@@ -26,7 +27,7 @@ public:
   }
   void insert(Node<T> *value)
   {
-    if(value->key > key)
+    if(value->key >= key)
     {
       if(right)
       {
@@ -94,6 +95,62 @@ public:
     if(left){left->postorder();}
     if(right){right->postorder();}
     std::cout << key << " ";
+  }
+  void updatelist(CircularList<Node<T>*> *&list, int expected, int realsize)
+  {
+    if(left || right)
+    {
+      if(left){left->updatelist(list, expected+1, realsize);}
+      if(right){right->updatelist(list, expected+1, realsize);}
+    }
+    else
+    {
+      if(expected == realsize){list->push_back(this);}
+    }
+  }
+  bool iscomplete(int expected, int height)
+  {
+    if(expected != (height-1))
+    {
+      bool result = false;
+      bool result2 = false;
+      if(left){result = left->iscomplete(expected+1,height);}
+      if(right){result2 = right->iscomplete(expected+1, height);}
+      return (result && result2);
+    }
+    return (right && left);
+  }
+  bool operator==(Node<T> *b)
+  {
+    std::cout << "ENTRO NODO" << std::endl;
+    bool leftt = left;
+    leftt = leftt == b->left;
+    bool rightt = right;
+    rightt = rightt == b->right;
+    bool keys = key == b->key;
+    bool result = leftt && rightt && keys;
+    std::cout << "result: " << result << std::endl;
+    if(left){leftt = (left == b->left);}
+    if(right){rightt = (right == b->right);}
+    return (result && leftt && rightt);
+  }
+  bool isBSTnode()
+  {
+    bool leftt = (left)? (left->key < key) && left->isBSTnode() : true ;
+    bool rightt = (right)? (right->key >= key) && right->isBSTnode() : true ;
+    return (leftt && rightt);
+  }
+  static bool equal(Node<T> *a, Node<T> *b)
+  {
+    bool leftt = a->left;
+    leftt = leftt == !!(b->left);
+    bool rightt = a->right;
+    rightt = rightt == !!(b->right);
+    bool keys = a->key == b->key;
+    bool result = leftt && rightt && keys;
+    if(a->left && b->left){leftt = equal(a->left, b->left);}
+    if(a->right && b->right){rightt = equal(a->right, b->right);}
+    return (result && leftt && rightt);
   }
 };
 
