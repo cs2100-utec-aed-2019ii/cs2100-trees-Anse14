@@ -11,6 +11,7 @@ int main()
   a->insert(4);
   a->insert(2);
   a->insert(7);
+
   b->insert(5);
   b->insert(3);
   b->insert(4);
@@ -37,6 +38,21 @@ int main()
   cout << endl;
   cout << "Igualdad: " << Tree<int>::equal(a, b) << endl;
   cout << "Is Bst: " << a->isBST() << endl;
+  cout << "Padres de List: ";
+  a->elements->for_each([a](Node<int> *i)
+  {
+    cout << a->ancestor(i)->key << " ";
+  });
+  cout << endl;
+  b->deleten(b->root);
+  cout << "ES COMPLETO?: " << a->isComplete() << endl;
+  cout << "IS FULL?: " << a->isFull() << endl;
+  cout << endl;
+  a->print();
+  a->print_caminos();
+  cout << a->next(a->root->left)->key << endl;
+  a->insert(1);
+  cout << "a esta balanceado?: " << a->isBalanced() << endl;
   delete a;
   delete b;
   return 0;

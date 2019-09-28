@@ -1,5 +1,6 @@
 #ifndef CircularList_H
 #define CircularList_H
+#include <iostream>
 #include <functional>
 
 template<typename T>
@@ -7,7 +8,7 @@ struct ClistNode
 {
   T value;
   ClistNode<T> *next;
-  ClistNode():value(0), next(nullptr){}
+  ClistNode(): next(nullptr){}
 };
 
 template<typename T>

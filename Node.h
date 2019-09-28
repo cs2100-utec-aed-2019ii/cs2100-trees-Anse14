@@ -108,37 +108,82 @@ public:
       if(expected == realsize){list->push_back(this);}
     }
   }
-  bool iscomplete(int expected, int height)
+  void get_leafs(CircularList<Node<T>*> *&list)
+  {
+    if(!left && !right)
+    {
+      list->push_back(this);
+      return;
+    }
+    if(left){left->get_leafs(list);};
+    if(right){right->get_leafs(list);};
+  }
+  bool get_path(Node<T> *value, CircularList<T> *list)
+  {
+    if(value == left || value == right)
+    {
+      list->push_back(value->key);
+    }
+  }
+  bool isFull(int expected, int height)
   {
     if(expected != (height-1))
     {
       bool result = false;
       bool result2 = false;
-      if(left){result = left->iscomplete(expected+1,height);}
-      if(right){result2 = right->iscomplete(expected+1, height);}
+      if(left){result = left->isFull(expected+1,height);}
+      if(right){result2 = right->isFull(expected+1, height);}
       return (result && result2);
     }
-    return (right && left);
-  }
-  bool operator==(Node<T> *b)
-  {
-    std::cout << "ENTRO NODO" << std::endl;
-    bool leftt = left;
-    leftt = leftt == b->left;
-    bool rightt = right;
-    rightt = rightt == b->right;
-    bool keys = key == b->key;
-    bool result = leftt && rightt && keys;
-    std::cout << "result: " << result << std::endl;
-    if(left){leftt = (left == b->left);}
-    if(right){rightt = (right == b->right);}
-    return (result && leftt && rightt);
+    return (!!right && !!left);
   }
   bool isBSTnode()
   {
     bool leftt = (left)? (left->key < key) && left->isBSTnode() : true ;
     bool rightt = (right)? (right->key >= key) && right->isBSTnode() : true ;
     return (leftt && rightt);
+  }
+  Node<T>* ancestor(Node<T> *value)
+  {
+    if(left == value || right == value){return this;}
+    else
+    {
+      Node<T> *temp = (left)? left->ancestor(value) : nullptr;
+      Node<T> *temp2 = (right)? right->ancestor(value) : nullptr;
+      return (temp)? temp : temp2;
+    }
+  }
+  CircularList<std::string>* get_level(int a)
+  {
+    CircularList<std::string> *return_value = new CircularList<std::string>;
+    lvl(0, a, return_value);
+    return return_value;
+  }
+  void lvl(int position, int expected, CircularList<std::string>  *&list)
+  {
+    if(position == expected)
+    {
+      list->push_back(std::to_string(key));
+      return;
+    }
+    if(left){left->lvl(position+1, expected, list);} else {list->push_back(" ");};
+    if(right){right->lvl(position+1, expected, list);} else {list->push_back(" ");};
+  }
+  CircularList<Node<T>*>* get_leveln(int a)
+  {
+    CircularList<Node<T>*> *return_value = new CircularList<Node<T>*>;
+    lvl(0, a, return_value);
+    return return_value;
+  }
+  void lvl(int position, int expected, CircularList<Node<T>*> *&list)
+  {
+    if(position == expected)
+    {
+      list->push_back(this);
+      return;
+    }
+    if(left){left->lvl(position+1, expected, list);}
+    if(right){right->lvl(position+1, expected, list);}
   }
   static bool equal(Node<T> *a, Node<T> *b)
   {
