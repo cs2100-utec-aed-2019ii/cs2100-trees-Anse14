@@ -51,7 +51,6 @@ int main()
   a->print();
   a->print_caminos();
   cout << a->next(a->root->left)->key << endl;
-  a->insert(1);
   cout << "a esta balanceado?: " << a->isBalanced() << endl;
   delete a;
   delete b;
