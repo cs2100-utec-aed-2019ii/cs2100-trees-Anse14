@@ -3,7 +3,17 @@
 #include "./Node.h"
 #include "./circularlist.h"
 #include <iostream>
+#include <sstream>
 #include <cmath>
+
+template<typename T, typename O>
+O ttoo(T value)
+{
+  std::stringstream a(value);
+  O result;
+  a >> result;
+  return result;
+}
 
 template <typename T>
 class Tree {
@@ -278,6 +288,21 @@ public:
   static bool equal(Tree<T> *a, Tree<T> *b)
   {
     return Node<T>::equal(a->root, b->root);
+  }
+  static Tree<T>* converttobst(Tree<T>* value)
+  {
+    Tree<T> *result = new Tree<T>;
+    CircularList<std::string> *temp;
+    for(int i = 0; i < value->height(); i++)
+    {
+      temp = value->root->get_level(i);
+      for(int j = 0; j < temp->get_size(); j++)
+      {
+        result->inser(ttoo<std::string, T>(temp->at(j)));
+      }
+      delete temp;
+    }
+    return result;
   }
 };
 
